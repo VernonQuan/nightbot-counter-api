@@ -3,7 +3,7 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
@@ -30,29 +30,29 @@ let db;
 // Get value
 app.get("/value", async (req, res) => {
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
-  res.send(`Counter is now ${row.value}`);
+  res.send(row.value.toString());
 });
 
 // Increment
 app.get("/increment", async (req, res) => {
-  const amount = parseInt(req.query.amount) || 1; // use ?amount=5
+  const amount = isNaN(parseInt(req.query.amount)) ? 1 : parseInt(req.query.amount);
   await db.run("UPDATE counter SET value = value + ? WHERE id = 1", [amount]);
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
-  res.send(`Counter increased to ${row.value}`);
+  res.send(row.value.toString());
 });
 
 // Decrement
 app.get("/decrement", async (req, res) => {
-  const amount = parseInt(req.query.amount) || 1;
+  const amount = isNaN(parseInt(req.query.amount)) ? 1 : parseInt(req.query.amount);
   await db.run("UPDATE counter SET value = value - ? WHERE id = 1", [amount]);
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
-  res.send(`Counter decreased to ${row.value}`);
+  res.send(row.value.toString());
 });
 
 // Reset
 app.get("/reset", async (req, res) => {
   await db.run("UPDATE counter SET value = 0 WHERE id = 1");
-  res.send("Counter has been reset to 0");
+  res.send('0');
 });
 
 app.listen(port, () => {
