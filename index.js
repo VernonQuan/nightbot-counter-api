@@ -47,17 +47,61 @@ app.get("/widget", (req, res) => {
 <meta charset="UTF-8">
 <title>Counter Widget</title>
 <style>
-  body { margin:0; background:transparent; font-family: Arial; font-size:72px; color:white; text-align:center; }
-  #counter { padding:20px; }
+  body {
+    margin: 0;
+    background: transparent;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+  }
+
+  .roulette {
+    width: 200px;
+    height: 200px;
+    border: 10px solid #222;
+    border-radius: 50%;
+    background: radial-gradient(circle at center, #fff 0%, #ff0000 60%, #000 100%);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 20px rgba(0,0,0,0.7);
+    position: relative;
+  }
+
+  .number {
+    font-family: 'Arial', sans-serif;
+    font-size: 72px;
+    color: white;
+    font-weight: bold;
+    text-shadow: 0 0 10px #000;
+    z-index: 1;
+  }
+
+  /* Optional decorative tick marks around the wheel */
+  .roulette::before {
+    content: "";
+    position: absolute;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    border: 4px dashed rgba(255,255,255,0.4);
+    box-sizing: border-box;
+  }
 </style>
 </head>
 <body>
-  <div id="counter">0</div>
+  <div class="roulette">
+    <div class="number" id="counter">0</div>
+  </div>
+
   <script>
     const counterEl = document.getElementById("counter");
-    const wsUrl = "wss://${process.env.HOST || 'nightbot-counter-api.onrender.com'}";
-    const ws = new WebSocket(wsUrl);
-    ws.onmessage = (event) => { counterEl.textContent = event.data; };
+    const ws = new WebSocket("wss://nightbot-counter-api.onrender.com");
+
+    ws.onmessage = (event) => {
+      counterEl.textContent = event.data;
+    };
   </script>
 </body>
 </html>
