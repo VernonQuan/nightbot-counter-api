@@ -35,7 +35,8 @@ app.get("/value", async (req, res) => {
 
 // Increment
 app.get("/increment", async (req, res) => {
-  const amount = isNaN(parseInt(req.query.amount)) ? 1 : parseInt(req.query.amount);
+  const amount = isNaN(parseInt(req.query.amount)) || req.query.amount == null ? 1 : parseInt(req.query.amount);
+  console.log('increment by', amount);
   await db.run("UPDATE counter SET value = value + ? WHERE id = 1", [amount]);
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
   res.send(row.value.toString());
@@ -43,7 +44,8 @@ app.get("/increment", async (req, res) => {
 
 // Decrement
 app.get("/decrement", async (req, res) => {
-  const amount = isNaN(parseInt(req.query.amount)) ? 1 : parseInt(req.query.amount);
+  const amount = isNaN(parseInt(req.query.amount)) || req.query.amount == null ? 1 : parseInt(req.query.amount);
+  console.log('decrement by', amount);
   await db.run("UPDATE counter SET value = value - ? WHERE id = 1", [amount]);
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
   res.send(row.value.toString());
