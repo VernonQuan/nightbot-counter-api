@@ -13,6 +13,12 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const port = process.env.PORT || 3000;
 
+import fs from "fs";
+
+const widgetPath = path.join(__dirname, "widget/dist");
+console.log("Serving widget from:", widgetPath);
+console.log("Exists?", fs.existsSync(widgetPath));
+
 app.use(express.json());
 
 // Serve React build static files
