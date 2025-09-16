@@ -1,7 +1,7 @@
 import express from "express";
 import sqlite3 from "sqlite3";
 import { open } from "sqlite";
-
+import { WebSocketServer } from "ws";
 import { isEmpty } from "./util.js";
 
 const app = express();
@@ -29,6 +29,16 @@ let db;
   }
 })();
 
+// Create a WebSocket server
+const wss = new WebSocketServer({ noServer: true });
+
+// Helper to broadcast new counter value to all clients
+function broadcast(value) {
+  wss.clients.forEach(client => {
+    if (client.readyState === 1) client.send(value.toString());
+  });
+}
+
 // Get value
 app.get("/value", async (req, res) => {
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
@@ -40,6 +50,7 @@ app.get("/increment", async (req, res) => {
   const amount = isEmpty(req?.query?.amount) || req.query.amount < 1 ? 1 : parseInt(req.query.amount);
   await db.run("UPDATE counter SET value = value + ? WHERE id = 1", [amount]);
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
+  broadcast(row.value); // <-- push new value to all WS clients
   res.send(row.value.toString());
 });
 
@@ -64,6 +75,13 @@ app.get("/ping", async (req, res) => {
   res.send("pong");
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Counter API running at http://localhost:${port}`);
+});
+
+// Use the same server for WebSocket upgrades
+server.on("upgrade", (request, socket, head) => {
+  wss.handleUpgrade(request, socket, head, ws => {
+    wss.emit("connection", ws, request);
+  });
 });
