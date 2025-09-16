@@ -15,11 +15,8 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
+// Serve React build static files
 app.use("/widget", express.static(path.join(__dirname, "widget/dist")));
-
-app.get(/^\/widget\/.*$/, (req, res) => {
-  res.sendFile(path.join(__dirname, "widget/dist", "index.html"));
-});
 
 let db;
 (async () => {
