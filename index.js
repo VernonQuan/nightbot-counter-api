@@ -47,6 +47,10 @@ function broadcast(value) {
 
 app.use("/widget", express.static(path.join(__dirname, "widget/dist")));
 
+app.get("/widget/*", (req, res) => {
+  res.sendFile(path.join(__dirname, "widget/dist", "index.html"));
+});
+
 // Get value
 app.get("/value", async (req, res) => {
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
