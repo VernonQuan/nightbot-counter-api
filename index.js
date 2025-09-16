@@ -55,6 +55,11 @@ app.get("/reset", async (req, res) => {
   res.send('0');
 });
 
+// Ping
+app.get("/ping", (req, res) => {
+  res.send("pong");
+});
+
 app.listen(port, () => {
   console.log(`Counter API running at http://localhost:${port}`);
 });
