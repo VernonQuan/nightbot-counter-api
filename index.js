@@ -47,7 +47,7 @@ function broadcast(value) {
 
 app.use("/widget", express.static(path.join(__dirname, "widget/dist")));
 
-app.get("/widget/*", (req, res) => {
+app.get("/widget/*(.*)", (req, res) => {
   res.sendFile(path.join(__dirname, "widget/dist", "index.html"));
 });
 
