@@ -61,7 +61,7 @@ app.get("/decrement", async (req, res) => {
   // Clamp new value to 0
   const newValue = Math.max(0, row.value - amount);
   await db.run("UPDATE counter SET value = ? WHERE id = 1", [newValue]);
-  broadcast(row.value); // <-- push new value to all WS clients
+  broadcast(newValue); // <-- push new value to all WS clients
   res.send(newValue.toString());
 });
 
