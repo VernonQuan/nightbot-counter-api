@@ -56,7 +56,7 @@ app.get("/reset", async (req, res) => {
 });
 
 // Ping
-app.get("/ping", (req, res) => {
+app.get("/ping", async (req, res) => {
   res.send("pong");
 });
 
