@@ -37,7 +37,7 @@ app.get("/value", async (req, res) => {
 
 // Increment
 app.get("/increment", async (req, res) => {
-  const amount = isEmpty(req?.query?.amount) ? 1 : parseInt(req.query.amount);
+  const amount = isEmpty(req?.query?.amount) || req.query.amount < 1 ? 1 : parseInt(req.query.amount);
   await db.run("UPDATE counter SET value = value + ? WHERE id = 1", [amount]);
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
   res.send(row.value.toString());
@@ -45,10 +45,12 @@ app.get("/increment", async (req, res) => {
 
 // Decrement
 app.get("/decrement", async (req, res) => {
-  const amount = isEmpty(req?.query?.amount) ? 1 : parseInt(req.query.amount);
-  await db.run("UPDATE counter SET value = value - ? WHERE id = 1", [amount]);
+  const amount = isEmpty(req?.query?.amount) || req.query.amount < 1 ? 1 : parseInt(req.query.amount);
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
-  res.send(row.value.toString());
+  // Clamp new value to 0
+  const newValue = Math.max(0, row.value - amount);
+  await db.run("UPDATE counter SET value = ? WHERE id = 1", [newValue]);
+  res.send(newValue.toString());
 });
 
 // Reset
