@@ -15,25 +15,31 @@ const port = process.env.PORT || 3000;
 
 app.use(express.json());
 
+app.use("/widget", express.static(path.join(__dirname, "widget/dist")));
+
+app.get(/^\/widget\/.*$/, (req, res) => {
+  res.sendFile(path.join(__dirname, "widget/dist", "index.html"));
+});
+
 let db;
 (async () => {
   db = await open({
     filename: "./counter.db",
     driver: sqlite3.Database
-  });
+  });  
 
   await db.exec(`
     CREATE TABLE IF NOT EXISTS counter (
       id INTEGER PRIMARY KEY,
       value INTEGER
-    )
-  `);
+    )  
+  `);  
 
   const row = await db.get("SELECT * FROM counter WHERE id = 1");
   if (!row) {
     await db.run("INSERT INTO counter (id, value) VALUES (1, 0)");
-  }
-})();
+  }  
+})();  
 
 // Create a WebSocket server
 const wss = new WebSocketServer({ noServer: true });
@@ -42,14 +48,8 @@ const wss = new WebSocketServer({ noServer: true });
 function broadcast(value) {
   wss.clients.forEach(client => {
     if (client.readyState === 1) client.send(value.toString());
-  });
-}
-
-app.use("/widget", express.static(path.join(__dirname, "widget/dist")));
-
-app.get(/^\/widget\/.*$/, (req, res) => {
-  res.sendFile(path.join(__dirname, "widget/dist", "index.html"));
-});
+  });  
+}  
 
 // Get value
 app.get("/value", async (req, res) => {
