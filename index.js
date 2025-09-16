@@ -3,6 +3,12 @@ import sqlite3 from "sqlite3";
 import { open } from "sqlite";
 import { WebSocketServer } from "ws";
 import { isEmpty } from "./util.js";
+import path from "path";
+import { fileURLToPath } from "url";
+
+// Needed to replicate __dirname in ESM
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -39,74 +45,7 @@ function broadcast(value) {
   });
 }
 
-app.get("/widget", (req, res) => {
-  res.type("html").send(`
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8">
-<title>Counter Widget</title>
-<style>
-  body {
-    margin: 0;
-    background: transparent;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-  }
-
-  .roulette {
-    width: 200px;
-    height: 200px;
-    border: 10px solid #222;
-    border-radius: 50%;
-    background: radial-gradient(circle at center, #fff 0%, #ff0000 60%, #000 100%);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-shadow: 0 0 20px rgba(0,0,0,0.7);
-    position: relative;
-  }
-
-  .number {
-    font-family: 'Arial', sans-serif;
-    font-size: 72px;
-    color: white;
-    font-weight: bold;
-    text-shadow: 0 0 10px #000;
-    z-index: 1;
-  }
-
-  /* Optional decorative tick marks around the wheel */
-  .roulette::before {
-    content: "";
-    position: absolute;
-    width: 180px;
-    height: 180px;
-    border-radius: 50%;
-    border: 4px dashed rgba(255,255,255,0.4);
-    box-sizing: border-box;
-  }
-</style>
-</head>
-<body>
-  <div class="roulette">
-    <div class="number" id="counter">0</div>
-  </div>
-
-  <script>
-    const counterEl = document.getElementById("counter");
-    const ws = new WebSocket("wss://nightbot-counter-api.onrender.com");
-
-    ws.onmessage = (event) => {
-      counterEl.textContent = event.data;
-    };
-  </script>
-</body>
-</html>
-  `);
-});
+app.use("/widget", express.static(path.join(__dirname, "widget/dist")));
 
 // Get value
 app.get("/value", async (req, res) => {
