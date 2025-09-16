@@ -39,6 +39,31 @@ function broadcast(value) {
   });
 }
 
+app.get("/widget", (req, res) => {
+  res.type("html").send(`
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Counter Widget</title>
+<style>
+  body { margin:0; background:transparent; font-family: Arial; font-size:72px; color:white; text-align:center; }
+  #counter { padding:20px; }
+</style>
+</head>
+<body>
+  <div id="counter">0</div>
+  <script>
+    const counterEl = document.getElementById("counter");
+    const wsUrl = "wss://${process.env.HOST || 'nightbot-counter-api.onrender.com'}";
+    const ws = new WebSocket(wsUrl);
+    ws.onmessage = (event) => { counterEl.textContent = event.data; };
+  </script>
+</body>
+</html>
+  `);
+});
+
 // Get value
 app.get("/value", async (req, res) => {
   const row = await db.get("SELECT value FROM counter WHERE id = 1");
