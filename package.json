@@ -2,11 +2,11 @@
   "name": "nightbot-counter-api",
   "version": "1.0.0",
   "description": "",
-  "main": "Counter.js",
+  "main": "index.js",
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "postinstall": "cd widget && npm install && npm run build",
+    "postinstall": "echo 'Running postinstall'; cd widget && npm install && npm run build",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
