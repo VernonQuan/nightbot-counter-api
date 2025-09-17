@@ -1,48 +1,47 @@
 body {
-  margin: 0;
+  align-items: center;
   background: transparent;
   display: flex;
-  justify-content: center;
-  align-items: center;
   height: fit-content;
-  width: fit-content;
+  justify-content: center;
+  margin: 0;
   padding: 4rem;
+  width: fit-content;
 }
 
 .pill {
-  width: fit-content;
-  height: fit-content;
-  padding: 1rem 3rem;
-  border: 10px solid #e8e8e8;
-  border-radius: 10rem;
-  background: radial-gradient(circle at center, #ffcaf8 0%, #d969c5 60%, #4dd0f8b3 100%);
-  display: flex;
-  gap: 3rem;
-  flex-direction: row;
-  justify-content: center;
   align-items: center;
-  box-shadow: 0 0 20px rgba(77, 208, 248, 0.7);
+  background: #1a263e;
+  border: 10px solid #eae4ff;
+  border-radius: 10rem;
+  display: flex;
+  flex-direction: row;
+  gap: 3rem;
+  height: fit-content;
+  justify-content: center;
+  padding: 1rem 3rem;
   position: relative;
+  width: fit-content;
 }
 
 .label {
+  color: white;
   font-family: 'Arial', sans-serif;
   font-size: 3rem;
-  color: white;
-  text-shadow: 0 0 5px rgba(77, 208, 248, 0.7);
+  text-shadow: 0 0 5px #4dd0f8b3;
 }
 
 .number {
+  background: radial-gradient(circle at center, #ffacff 50%, #1a263e 100%);
   border: 8px solid #e8e8e8;
-  background: radial-gradient(circle at center, #a2e9ff 0%, #4dd0f8 100%);
   border-radius: 5rem;
+  color: white;
   font-family: 'Arial', sans-serif;
   font-size: 4rem;
-  color: white;
   font-weight: bold;
-  text-shadow: 0 0 10px #d969c5;
-  width: fit-content;
   height: fit-content;
   padding: 0.5rem 3rem;
+  text-shadow: 0 0 10px #d969c5;
+  width: fit-content;
   z-index: 1;
 }
